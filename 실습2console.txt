@@ -1,0 +1,76 @@
+
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Workspace loaded from ~/.RData]
+
+> library(readxl)
+> semi_data <- read_excel("Desktop/계량경제학 데이터파일/semi_data.xlsx")
+> View(semi_data)                                                                                                         
+> x = semi_data$lnrd
+> y = semi_data$lnco2 # x와 y 세팅
+> plot(x , y)
+> cor(semi_data)
+               year      lnco2      lnsales   lnpatent         lnrd      policy          t         tt          new
+year      1.0000000  0.9705509 -0.151931957 -0.4846779 -0.612054124  0.87287156  1.0000000  0.9761871 -0.613194508
+lnco2     0.9705509  1.0000000 -0.037380695 -0.4432209 -0.709332709  0.86759100  0.9705509  0.9097602 -0.710291137
+lnsales  -0.1519320 -0.0373807  1.000000000  0.6832532 -0.006512814 -0.03960681 -0.1519320 -0.2935668 -0.004414788
+lnpatent -0.4846779 -0.4432209  0.683253248  1.0000000  0.182560399 -0.38716206 -0.4846779 -0.5998060  0.185522675
+lnrd     -0.6120541 -0.7093327 -0.006512814  0.1825604  1.000000000 -0.40001985 -0.6120541 -0.4847444  0.999995459
+policy    0.8728716  0.8675910 -0.039606806 -0.3871621 -0.400019851  1.00000000  0.8728716  0.8520859 -0.400980939
+t         1.0000000  0.9705509 -0.151931957 -0.4846779 -0.612054124  0.87287156  1.0000000  0.9761871 -0.613194508
+tt        0.9761871  0.9097602 -0.293566816 -0.5998060 -0.484744443  0.85208592  0.9761871  1.0000000 -0.486309545
+new      -0.6131945 -0.7102911 -0.004414788  0.1855227  0.999995459 -0.40098094 -0.6131945 -0.4863095  1.000000000
+> cor(x,y) # lnrd와 lnco2의 관계 
+[1] -0.7093327
+> rr <- lm(y~x) # y와 x관의 관계를 분석해달라.
+> summary(rr)
+
+Call:
+lm(formula = y ~ x)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-48.697 -18.614   3.513  23.248  33.662 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 254.3250    22.8083  11.151  3.1e-05 ***
+x            -0.2550     0.1034  -2.465   0.0488 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 32.17 on 6 degrees of freedom
+Multiple R-squared:  0.5032,	Adjusted R-squared:  0.4203 
+F-statistic: 6.076 on 1 and 6 DF,  p-value: 0.04879
+
+> #intercept : 상수,  X: 기울기 
+> #y를 분석하는 변수가 x 하나일때 : 단순회귀분석, 최소자승법
+> # y = b1 + b2 * x
+> # estimate : 추정치, std : 표준편차 
+> # multiple r-square : 결정계수 
+> # 1 : 추정한 모형 : y = 254.33 - 0.26x
+> # 2: 회귀계수의 유의성 (b1과 b2가 0과 같은지 다른지)
+> # 대립가설(H1) : b1 or b2 != 0 , 귀무가설(H0) : b1 or b2 = 0 
+> # t값 = 추정치 / 표준편차  , |t의 값| > 2 
+> # t의 절댓값이 2보다 크다 <- 1.96(유의수준 95%에서 퉁쳐서 사용)
+> # 귀무가설을 기각. (대립가설이 옳다. = b1 , b2 가 0이 아니다.)
+> # 통계적으로 유의미하다. 
+> # p값이 유의수준보다 적을수록 좋음. p값이 유의수준보다 작다면 귀무가설을 기각할 수 있고, b2가 유의미하다.
+> hist(resid(rr)) # rr파일 오차항을 히스토그램으로 그려라
+> plot(resid(rr)) # rr파일 오차항을 산점도로 그려라
