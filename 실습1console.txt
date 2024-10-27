@@ -1,0 +1,74 @@
+
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> income <- read.delim("~/Desktop/계량경제학 데이터파일/income.txt")
+>   View(income)
+> plot(x=income$AGE, y=income$INCOME, xlab="age", ylab="income") # plot형태로 x에는 income.age를 , y에는 income.income을 생성해라. lab: 각 축의 이름
+> cor(income$AGE, income$INCOME) #cor : 상관관계
+[1] 0.4604418
+> cor(income) # income에 있는 변수들을 전부 나타내기.
+                OBS        AGE           ED     INCOME         SEX
+OBS     1.000000000 -0.4785098  0.003653513 -0.3725264 -0.68714845
+AGE    -0.478509815  1.0000000 -0.214802044  0.4604418  0.49747850
+ED      0.003653513 -0.2148020  1.000000000  0.1838271 -0.05428855
+INCOME -0.372526402  0.4604418  0.183827052  1.0000000  0.41984324
+SEX    -0.687148447  0.4974785 -0.054288551  0.4198432  1.00000000
+> ls.result<-lsfit(x=income$AGE, y=income$INCOME) #변수명<-lsfit(x=변수, y=변수). lsfit:r이 데이터를 회귀분석 해주는 case1
+> ls.print(ls.result) #출력
+Residual Standard Error=9.5159
+R-Square=0.212
+F-statistic (df=1, 90)=24.2142
+p-value=0
+
+          Estimate Std.Err t-value Pr(>|t|)
+Intercept  15.4692  5.6851  2.7210   0.0078
+X           0.6798  0.1381  4.9208   0.0000
+
+
+> # y = b1 + b2 * x . intercept : 상수(b1) , X : b2(기울기) 
+> # estimate : 추정값, std: 표준오차 , t : 검정통계량 , p : 확률 
+> # t의 절댓값이 2보다 크면 b1과 b2모두 y를 설명하는데 유의미한 변수이다.   
+#r의 데이터 회귀분석 case2x) 유의수준이 0.05이고, 각각의 p값이 0.05보다 작으면 각각의 귀무가설을 기각 가능 하게되고 대립가설을 채택가능
+> #r의 데이터 회귀분석 케이스 2번 : lm
+> results <- lm.(income$INCOME~income$AGE)
+Error in lm.(income$INCOME ~ income$AGE) : could not find function "lm."
+> result <- lm(income$INCOME~income$AGE)
+> summary(result)
+
+Call:
+lm(formula = income$INCOME ~ income$AGE)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-16.198  -6.285  -1.766   5.405  25.980 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  15.4692     5.6851   2.721  0.00781 ** 
+income$AGE    0.6798     0.1381   4.921 3.87e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 9.516 on 90 degrees of freedom
+Multiple R-squared:  0.212,	Adjusted R-squared:  0.2033 
+F-statistic: 24.21 on 1 and 90 DF,  p-value: 3.871e-06
+
+abline(lm(income$INCOME~income$AGE)))) #추세선을 그려라
+> hist(resid(result)) # result 잔차를 히스토그램으로 그려라
+> plot(resid(result)) # result 잔차를 플롯으로 그려라
